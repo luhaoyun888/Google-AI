@@ -1,0 +1,5 @@
+{
+  "name": "WasmGuard - Sandbox Controller",
+  "description": "基于 Go 语言 WebAssembly 运行时的 React 前端。演示了对 Wasm 插件的细粒度控制（文件、网络、资源），具有仿真功能和 Gemini 驱动的安全审计。",
+  "requestFramePermissions": []
+}
