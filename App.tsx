@@ -1,14 +1,16 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Terminal } from './components/Terminal';
 import { PolicyEditor } from './components/PolicyEditor';
 import { FileSystemViewer } from './components/FileSystemViewer';
 import { PluginDetails } from './components/PluginDetails';
 import { PluginForm } from './components/PluginForm';
+import { KernelViewer } from './components/KernelViewer';
 import { SAMPLE_PLUGINS, DEFAULT_POLICY, INITIAL_FILES } from './constants';
 import { WasmPlugin, SecurityPolicy, LogEntry, AnalysisResult } from './types';
 import { runPluginSimulation } from './services/mockRuntime';
 import { analyzePluginSecurity } from './services/geminiService';
-import { Play, RotateCcw, ShieldAlert, Cpu, Code, Lock, Terminal as TerminalIcon, Sparkles, FolderOpen, FileBadge, Pause, Search, Plus, Trash2, Edit2, Power, Save } from 'lucide-react';
+import { Play, RotateCcw, ShieldAlert, Cpu, Code, Lock, Terminal as TerminalIcon, Sparkles, FolderOpen, FileBadge, Pause, Search, Plus, Trash2, Edit2, Power, Save, Server } from 'lucide-react';
 
 export default function App() {
   // Plugin Data State (CRUD)
@@ -26,7 +28,7 @@ export default function App() {
   const [isRunning, setIsRunning] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const pausedRef = useRef(false); // Ref for the async generator loop to check
-  const [activeTab, setActiveTab] = useState<'code' | 'policy' | 'files' | 'details'>('policy');
+  const [activeTab, setActiveTab] = useState<'code' | 'policy' | 'files' | 'details' | 'kernel'>('policy');
   
   // Virtual File System State
   const [virtualFiles, setVirtualFiles] = useState<Record<string, string>>(INITIAL_FILES);
@@ -377,6 +379,16 @@ export default function App() {
                     >
                         <FileBadge className="w-4 h-4" /> 插件详情
                     </button>
+                    <button 
+                         onClick={() => setActiveTab('kernel')}
+                         className={`flex items-center gap-2 px-5 py-3 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${
+                            activeTab === 'kernel' 
+                            ? 'border-emerald-500 text-emerald-400 bg-emerald-500/5' 
+                            : 'border-transparent text-slate-500 hover:text-slate-300'
+                        }`}
+                    >
+                        <Server className="w-4 h-4" /> 内核源码
+                    </button>
                 </div>
 
                 <div className="flex-1 overflow-y-auto">
@@ -404,6 +416,9 @@ export default function App() {
                     )}
                     {activeTab === 'details' && (
                         <PluginDetails plugin={selectedPlugin} />
+                    )}
+                     {activeTab === 'kernel' && (
+                        <KernelViewer />
                     )}
                 </div>
 
